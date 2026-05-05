@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket Codes</title>
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #38bdf8;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .code-container {
+            background-color: #1e293b;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: #0f172a;
+            border-bottom: 1px solid #334155;
+        }
+        .filename {
+            font-weight: 600;
+            color: #94a3b8;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+        .copy-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+        pre {
+            margin: 0;
+            padding: 24px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+        /* Syntax Highlight Styles */
+        .keyword { color: #c678dd; }
+        .string { color: #98c379; }
+        .function { color: #61afef; }
+        .number { color: #d19a66; }
+    </style>
+</head>
+<body>
+
+    <h1>Python Socket Client-Server</h1>
+
+    <div class="code-container">
+        <div class="header">
+            <span class="filename">server.py</span>
+            <button class="copy-btn" onclick="copyCode('server-code', this)">Copy Code</button>
+        </div>
+        <pre><code id="server-code"><span class="keyword">import</span> socket
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind((<span class="string">'localhost'</span>, <span class="number">12345</span>))
+server_socket.listen(<span class="number">1</span>)
+<span class="function">print</span>(<span class="string">"Server is waiting for connection..."</span>)
+
+conn, addr = server_socket.accept()
+<span class="function">print</span>(<span class="string">"Connected to:"</span>, addr)
+
+data = conn.recv(<span class="number">1024</span>)
+<span class="function">print</span>(<span class="string">"Client says:"</span>, data.decode())
+
+conn.send(<span class="string">"Hello Client, Message Received!"</span>.encode())
+
+conn.close()
+server_socket.close()</code></pre>
+    </div>
+
+    <div class="code-container">
+        <div class="header">
+            <span class="filename">client.py</span>
+            <button class="copy-btn" onclick="copyCode('client-code', this)">Copy Code</button>
+        </div>
+        <pre><code id="client-code"><span class="keyword">import</span> socket
+
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((<span class="string">'localhost'</span>, <span class="number">12345</span>))
+
+client_socket.send(<span class="string">"Hello Server!"</span>.encode())
+
+data = client_socket.recv(<span class="number">1024</span>)
+<span class="function">print</span>(<span class="string">"Server says:"</span>, data.decode())
+
+client_socket.close()</code></pre>
+    </div>
+
+    <script>
+        function copyCode(elementId, btnElement) {
+            const codeElement = document.getElementById(elementId);
+            const textToCopy = codeElement.innerText;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = btnElement.innerText;
+                btnElement.innerText = 'Copied!';
+                btnElement.style.backgroundColor = '#10b981'; // Green for success
+                
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.style.backgroundColor = ''; // Reset to default
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
